@@ -56,6 +56,7 @@ app.get("/users", (req, res) => {
   } else {
     res.send(users);
   }
+  res.status(200).end(); //always sending something
 });
 
 const findUserByName = (name) => {
@@ -70,6 +71,7 @@ app.get("/users/:id", (req, res) => {
   else {
     result = { users_list: result };
     res.send(result);
+    res.status(200).end();
   }
 });
 
@@ -95,7 +97,7 @@ app.delete("/users/:id", (req, res) => {
   const check = findUserById(id);
   if (check !== undefined && check.length != 0) {
     deleteUserById(id);
-    res.status(200).end(); //TODO: figure out which code it should be
+    res.status(204).end();
   } else {
     res.status(404).end();
   }
