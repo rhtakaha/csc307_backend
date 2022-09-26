@@ -44,7 +44,12 @@ app.listen(port, () => {
 
 app.get("/users", (req, res) => {
   const name = req.query.name;
-  if (name != undefined) {
+  const job = req.query.job;
+  if (name != undefined && job != undefined) {
+    let result = findUserByNameAndJob(name, job);
+    result = { users_list: result };
+    res.send(result);
+  } else if (name != undefined) {
     let result = findUserByName(name);
     result = { users_list: result };
     res.send(result);
@@ -76,7 +81,7 @@ function findUserById(id) {
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
   addUser(userToAdd);
-  res.status(200).end();
+  res.status(201).end();
 });
 
 function addUser(user) {
@@ -101,3 +106,9 @@ function deleteUserById(id) {
     (users) => users["id"] !== id
   );
 }
+
+const findUserByNameAndJob = (name, job) => {
+  return users["users_list"].filter(
+    (user) => user["name"] === name && user["job"] === job
+  );
+};
