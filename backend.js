@@ -82,3 +82,22 @@ app.post("/users", (req, res) => {
 function addUser(user) {
   users["users_list"].push(user);
 }
+
+//implement to delete a user by id
+//first see if that id exists and if it does remove it
+app.delete("/users/:id", (req, res) => {
+  const id = req.params["id"];
+  const check = findUserById(id);
+  if (check !== undefined && check.length != 0) {
+    deleteUserById(id);
+    res.status(200).end(); //TODO: figure out which code it should be
+  } else {
+    res.status(404).end();
+  }
+});
+
+function deleteUserById(id) {
+  users["users_list"] = users["users_list"].filter(
+    (users) => users["id"] !== id
+  );
+}
