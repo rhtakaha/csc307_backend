@@ -48,10 +48,11 @@ app.get("/users", async (req, res) => {
   const job = req.query.job;
   if (name != undefined && job != undefined) {
     //TODO:
-    let result = findUserByNameAndJob(name, job);
-    result = { users_list: result };
+    let result = await user_change.findUserByNameAndJob(name, job);
+    //result = { users_list: result };
     res.send(result);
   } else if (name != undefined) {
+    //...users/?name=__
     let result = await user_change.findUserByName(name);
     res.send(result);
   } else if (job != undefined) {
@@ -65,9 +66,9 @@ app.get("/users", async (req, res) => {
   res.status(200).end(); //always sending something
 });
 
-const findUserByName = (name) => {
-  return users["users_list"].filter((user) => user["name"] === name);
-};
+// const findUserByName = (name) => {
+//   return users["users_list"].filter((user) => user["name"] === name);
+// };
 
 app.get("/users/:id", async (req, res) => {
   const id = req.params["id"]; //or req.params.id
@@ -80,10 +81,10 @@ app.get("/users/:id", async (req, res) => {
   }
 });
 
-function findUserById(id) {
-  return users["users_list"].find((user) => user["id"] === id); // or line below
-  //return users['users_list'].filter( (user) => user['id'] === id);
-}
+// function findUserById(id) {
+//   return users["users_list"].find((user) => user["id"] === id); // or line below
+//   //return users['users_list'].filter( (user) => user['id'] === id);
+// }
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
@@ -93,31 +94,32 @@ app.post("/users", (req, res) => {
   res.status(201).end();
 });
 
-function addUser(user) {
-  users["users_list"].push(user);
-}
+// function addUser(user) {
+//   users["users_list"].push(user);
+// }
 
 //implement to delete a user by id
 //first see if that id exists and if it does remove it
-app.delete("/users/:id", (req, res) => {
+app.delete("/users/:id", async (req, res) => {
   const id = req.params["id"];
-  const check = findUserById(id);
+  const check = await user_change.findUserById(id);
   if (check !== undefined && check.length != 0) {
-    deleteUserById(id);
+    //deleteUserById(id);
+    user_change.deleteUserById(id);
     res.status(204).end();
   } else {
     res.status(404).end();
   }
 });
 
-function deleteUserById(id) {
-  users["users_list"] = users["users_list"].filter(
-    (users) => users["id"] !== id
-  );
-}
+// function deleteUserById(id) {
+//   users["users_list"] = users["users_list"].filter(
+//     (users) => users["id"] !== id
+//   );
+// }
 
-const findUserByNameAndJob = (name, job) => {
-  return users["users_list"].filter(
-    (user) => user["name"] === name && user["job"] === job
-  );
-};
+// const findUserByNameAndJob = (name, job) => {
+//   return users["users_list"].filter(
+//     (user) => user["name"] === name && user["job"] === job
+//   );
+// };
